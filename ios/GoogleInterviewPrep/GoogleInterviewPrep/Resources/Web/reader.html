@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' blob:; img-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+  <title>Reader</title>
+  <link rel="stylesheet" href="reader.css">
+  <script src="syntax-highlighter.min.js"></script>
+  <script src="markdown-renderer.min.js"></script>
+</head>
+<body data-theme="system">
+  <div id="content-container"></div>
+
+  <script>
+    function toggleWrap(cardId) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+      const scroll = card.querySelector('.code-scroll-container');
+      if (scroll) {
+        scroll.classList.toggle('wrap');
+      }
+    }
+
+    function copyCode(encodedCode, btn) {
+      const text = decodeURIComponent(encodedCode);
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text);
+      }
+      if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.copyCode) {
+        window.webkit.messageHandlers.copyCode.postMessage(text);
+      }
+      const original = btn.innerText;
+      btn.innerText = "Copied!";
+      setTimeout(() => { btn.innerText = original; }, 1500);
+    }
+
+    function renderDocument(markdownContent, docId, isHistorical) {
+      const container = document.getElementById('content-container');
+      let badge = isHistorical ? '<div class="historical-badge">Historical Review / Archival</div>' : '';
+      container.innerHTML = badge + MarkdownRenderer.render(markdownContent, docId);
+
+      document.querySelectorAll('a.external-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.openExternalUrl) {
+            window.webkit.messageHandlers.openExternalUrl.postMessage(this.href);
+          }
+        });
+      });
+    }
+
+    function scrollToAnchor(anchorId) {
+      const el = document.getElementById(anchorId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function applyPreferences(theme, bodyFontSize, codeFontSize) {
+      const resolvedTheme = theme === 'system'
+        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        : theme;
+      document.body.setAttribute('data-theme', resolvedTheme);
+      if (bodyFontSize) {
+        document.documentElement.style.setProperty('--body-font-size', bodyFontSize + 'px');
+      }
+      if (codeFontSize) {
+        document.documentElement.style.setProperty('--code-font-size', codeFontSize + 'px');
+      }
+    }
+  </script>
+</body>
+</html>

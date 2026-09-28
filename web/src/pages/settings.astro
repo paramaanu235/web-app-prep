@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Settings from '../components/islands/Settings';
+import { loadContent } from '../content-pipeline';
+
+const content = await loadContent();
+const integrity = {
+  documents: content.docs.length,
+  lines: content.docs.reduce((n, d) => n + d.lineCount, 0),
+  builtAt: new Date().toISOString().slice(0, 10),
+};
+---
+
+<BaseLayout title="Settings" current="settings">
+  <Settings client:load integrity={integrity} />
+</BaseLayout>

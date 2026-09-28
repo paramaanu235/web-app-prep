@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Toc from '../../../components/Toc.astro';
+import DocNav from '../../../components/DocNav.astro';
+import { loadContent } from '../../../content-pipeline';
+import { icons } from '../../../lib/icons';
+
+export async function getStaticPaths() {
+  const content = await loadContent();
+  return content.docs.map((doc) => ({ params: { id: doc.meta.id } }));
+}
+
+const content = await loadContent();
+const doc = content.docsById.get(Astro.params.id!)!;
+const { meta } = doc;
+const base = import.meta.env.BASE_URL;
+const order = content.manifest.documents;
+const index = order.findIndex((d) => d.id === meta.id);
+const prev = order[index - 1];
+const next = order[index + 1];
+const minutes = Math.max(1, Math.round(doc.wordCount / 230));
+const isJava = meta.format === 'java';
+---
+
+<BaseLayout title={meta.title} description={meta.summary ?? undefined}>
+  <div class="doc-layout" data-doc-id={meta.id}>
+    <aside class="doc-sidebar" aria-label="All documents">
+      <DocNav categories={content.categories} currentId={meta.id} />
+    </aside>
+
+    <article class="doc-main" id={`${meta.id}-top`}>
+      <div class="eyebrow"><a href={`${base}library/`}>Library</a> / {meta.primaryCategory}</div>
+      {(!doc.hasOwnTitle) && <h1 class="page-title prose-title">{meta.title}</h1>}
+      <div class="doc-meta">
+        <span>{isJava ? `${doc.lineCount} lines of Java` : `${minutes} min read`}</span>
+        {meta.isHistorical && <span class="badge">Historical</span>}
+        <span class="spacer"></span>
+        <button class="btn" type="button" data-complete aria-pressed="false">Mark as read</button>
+      </div>
+
+      <div class="resume-note" data-resume hidden>
+        <span>You were reading <strong data-resume-title></strong>.</span>
+        <a href="#" data-resume-link>Resume</a>
+        <button class="code-btn" type="button" data-resume-dismiss>Dismiss</button>
+      </div>
+
+      <div class="prose" id="doc-content" data-format={meta.format}>
+        {isJava ? <div class="source-view" set:html={doc.html} /> : <Fragment set:html={doc.html} />}
+      </div>
+
+      <nav class="doc-pager" aria-label="Next and previous documents">
+        {prev && <a class="prev" href={`${base}docs/${prev.id}/`}><small>Previous</small>{prev.title}</a>}
+        {next && <a class="next" href={`${base}docs/${next.id}/`}><small>Next</small>{next.title}</a>}
+      </nav>
+    </article>
+
+    <aside class="doc-toc" aria-label="On this page">
+      {doc.toc.length > 0 && <Toc items={doc.toc} title={isJava ? 'Outline' : 'On this page'} />}
+    </aside>
+  </div>
+
+  {
+    doc.toc.length > 0 && (
+      <button class="btn toc-fab" type="button" data-open-toc>
+        <Fragment set:html={icons.list} /> Contents
+      </button>
+    )
+  }
+  <dialog class="sheet" id="toc-sheet" aria-label="Contents">
+    <div class="dialog-head">
+      <h2>{isJava ? 'Outline' : 'On this page'}</h2>
+      <button class="icon-btn" type="button" aria-label="Close" data-close-dialog><Fragment set:html={icons.close} /></button>
+    </div>
+    <Toc items={doc.toc} />
+  </dialog>
+
+  <dialog id="shortcuts-dialog" aria-label="Keyboard shortcuts">
+    <div class="dialog-head">
+      <h2>Keyboard shortcuts</h2>
+      <button class="icon-btn" type="button" aria-label="Close" data-close-dialog><Fragment set:html={icons.close} /></button>
+    </div>
+    <div class="shortcuts">
+      <dl>
+        <dt><kbd>/</kbd> or <kbd>⌘K</kbd></dt><dd>Search everything</dd>
+        <dt><kbd>j</kbd> / <kbd>k</kbd></dt><dd>Next / previous section</dd>
+        <dt><kbd>t</kbd></dt><dd>Table of contents</dd>
+        <dt><kbd>b</kbd></dt><dd>Bookmark the current section</dd>
+        <dt><kbd>?</kbd></dt><dd>Show this help</dd>
+      </dl>
+    </div>
+  </dialog>
+</BaseLayout>
+
+<script>
+  import '../../../scripts/reader';
+</script>
+
+<style>
+  .prose-title {
+    font-size: 2.1rem;
+    line-height: 1.2;
+    letter-spacing: -0.022em;
+    margin: 0 0 0.6em;
+  }
+</style>

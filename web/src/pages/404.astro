@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="Not found">
+  <div class="page page-narrow">
+    <header class="page-header">
+      <h1>Page not found</h1>
+      <p>That page doesn’t exist. Try the <a href={`${base}library/`}>library</a> or press <kbd>/</kbd> to search.</p>
+    </header>
+  </div>
+</BaseLayout>

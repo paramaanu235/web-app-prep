@@ -1,0 +1,275 @@
+:root {
+  --bg-color: #ffffff;
+  --text-color: #1c1c1e;
+  --secondary-text: #6e6e73;
+  --border-color: #e5e5ea;
+  --code-bg: #f2f2f7;
+  --code-text: #1c1c1e;
+  --inline-code-bg: #e5e5ea;
+  --accent-color: #007aff;
+  --table-stripe: #f9f9fb;
+  --table-header: #f2f2f7;
+  --blockquote-border: #007aff;
+  --blockquote-bg: #f2f2f7;
+  --body-font-size: 16px;
+  --code-font-size: 13.5px;
+  --line-height: 1.6;
+}
+
+[data-theme="dark"] {
+  --bg-color: #000000;
+  --text-color: #f2f2f7;
+  --secondary-text: #8e8e93;
+  --border-color: #38383a;
+  --code-bg: #1c1c1e;
+  --code-text: #f2f2f7;
+  --inline-code-bg: #2c2c2e;
+  --accent-color: #0a84ff;
+  --table-stripe: #1c1c1e;
+  --table-header: #2c2c2e;
+  --blockquote-border: #0a84ff;
+  --blockquote-bg: #1c1c1e;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"] {
+    --bg-color: #000000;
+    --text-color: #f2f2f7;
+    --secondary-text: #8e8e93;
+    --border-color: #38383a;
+    --code-bg: #1c1c1e;
+    --code-text: #f2f2f7;
+    --inline-code-bg: #2c2c2e;
+    --accent-color: #0a84ff;
+    --table-stripe: #1c1c1e;
+    --table-header: #2c2c2e;
+    --blockquote-border: #0a84ff;
+    --blockquote-bg: #1c1c1e;
+  }
+}
+
+[data-theme="sepia"] {
+  --bg-color: #f3ead2;
+  --text-color: #352a20;
+  --secondary-text: #6f5b47;
+  --border-color: #c9b58f;
+  --code-bg: #e8dcc0;
+  --code-text: #2f261e;
+  --inline-code-bg: #dfcfaa;
+  --accent-color: #7a4a22;
+  --table-stripe: #eee2c8;
+  --table-header: #dfcfaa;
+  --blockquote-border: #9b6331;
+  --blockquote-bg: #eadcbe;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  padding: 16px 16px 60px 16px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  font-size: var(--body-font-size);
+  line-height: var(--line-height);
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  word-wrap: break-word;
+}
+
+h1, h2, h3, h4 {
+  color: var(--text-color);
+  font-weight: 700;
+  line-height: 1.3;
+  scroll-margin-top: 20px;
+}
+
+h1 { font-size: 1.65em; margin: 1.4em 0 0.6em 0; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
+h2 { font-size: 1.35em; margin: 1.3em 0 0.5em 0; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; }
+h3 { font-size: 1.15em; margin: 1.2em 0 0.4em 0; }
+h4 { font-size: 1.0em; margin: 1.1em 0 0.3em 0; }
+
+p {
+  margin: 0.8em 0;
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+a:hover, a:active {
+  text-decoration: underline;
+}
+
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.2em 0;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.9em;
+  min-width: 320px;
+}
+
+th, td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: top;
+}
+
+th {
+  background-color: var(--table-header);
+  font-weight: 600;
+}
+
+tr:nth-child(even) td {
+  background-color: var(--table-stripe);
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background-color: var(--inline-code-bg);
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+.code-card {
+  margin: 1.2em 0;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--code-bg);
+  overflow: hidden;
+}
+
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px;
+  background: rgba(128, 128, 128, 0.08);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--secondary-text);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.code-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.code-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--accent-color);
+  font-size: 11px;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+.code-btn:active {
+  opacity: 0.7;
+}
+
+.code-scroll-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 12px;
+  margin: 0;
+}
+
+.code-scroll-container pre {
+  margin: 0;
+  padding: 0;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: var(--code-font-size);
+  line-height: 1.45;
+  color: var(--code-text);
+}
+
+.code-scroll-container.wrap pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+blockquote {
+  margin: 1.2em 0;
+  padding: 8px 16px;
+  border-left: 4px solid var(--blockquote-border);
+  background-color: var(--blockquote-bg);
+  border-radius: 0 8px 8px 0;
+  color: var(--secondary-text);
+}
+
+blockquote p {
+  margin: 0.4em 0;
+}
+
+ul, ol {
+  padding-left: 24px;
+  margin: 0.8em 0;
+}
+
+li {
+  margin: 0.4em 0;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 2em 0;
+}
+
+.task-list-item {
+  list-style-type: none;
+  margin-left: -20px;
+}
+
+.historical-badge {
+  display: inline-block;
+  background-color: #ff9500;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Syntax Highlighting */
+.hl-keyword { color: #d73a49; font-weight: 600; }
+.hl-type { color: #6f42c1; }
+.hl-string { color: #032f62; }
+.hl-comment { color: #6a737d; font-style: italic; }
+.hl-number { color: #005cc5; }
+.hl-annotation { color: #e36209; font-weight: 500; }
+.hl-builtin { color: #005cc5; }
+
+[data-theme="dark"] .hl-keyword { color: #ff7b72; font-weight: 600; }
+[data-theme="dark"] .hl-type { color: #d2a8ff; }
+[data-theme="dark"] .hl-string { color: #a5d6ff; }
+[data-theme="dark"] .hl-comment { color: #8b949e; font-style: italic; }
+[data-theme="dark"] .hl-number { color: #79c0ff; }
+[data-theme="dark"] .hl-annotation { color: #ffa657; font-weight: 500; }
+[data-theme="dark"] .hl-builtin { color: #79c0ff; }
+
+[data-theme="sepia"] .hl-keyword { color: #9b2c2c; font-weight: 600; }
+[data-theme="sepia"] .hl-type { color: #6941a5; }
+[data-theme="sepia"] .hl-string { color: #17603a; }
+[data-theme="sepia"] .hl-comment { color: #75624f; font-style: italic; }
+[data-theme="sepia"] .hl-number { color: #235a91; }
+[data-theme="sepia"] .hl-annotation { color: #9a4b13; font-weight: 500; }
+[data-theme="sepia"] .hl-builtin { color: #235a91; }

@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Home from '../components/islands/Home';
+import { loadContent } from '../content-pipeline';
+
+const content = await loadContent();
+const docs = content.manifest.documents.map((d) => ({ id: d.id, title: d.title, summary: d.summary }));
+const startHere = docs.filter((d) => ['start_here', 'plans'].some((c) => content.docsById.get(d.id)!.meta.categoryIDs.includes(c))).slice(0, 3);
+---
+
+<BaseLayout title="Interview Prep" current="home">
+  <Home client:load base={import.meta.env.BASE_URL} docs={docs} startHere={startHere} />
+</BaseLayout>

@@ -1,0 +1,86 @@
+---
+import '../styles/global.css';
+import SearchPalette from '../components/islands/SearchPalette';
+import { icons } from '../lib/icons';
+
+interface Props {
+  title: string;
+  description?: string;
+  current?: 'home' | 'library' | 'progress' | 'saved' | 'search' | 'settings';
+}
+
+const { title, description = 'Offline-first Google interview preparation library, tracker and notes.', current } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const nav = [
+  { key: 'library', label: 'Library' },
+  { key: 'progress', label: 'Progress' },
+  { key: 'saved', label: 'Saved' },
+  { key: 'search', label: 'Search' },
+] as const;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title === 'Interview Prep' ? title : `${title} · Interview Prep`}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#fdfdfc" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141414" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <link rel="manifest" href={`${base}manifest.webmanifest`} />
+    <script is:inline>
+      // Apply saved display prefs before first paint (mirrors src/lib/prefs.ts).
+      (function () {
+        try {
+          var p = JSON.parse(localStorage.getItem('prep.prefs') || '{}');
+          var r = document.documentElement;
+          var t = p.theme || 'system';
+          if (t === 'system') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          r.dataset.theme = t;
+          if (p.font) r.dataset.font = p.font;
+          if (p.measure) r.dataset.measure = p.measure;
+          if (p.size) r.style.setProperty('--read-size', p.size + 'px');
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body data-base={base}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="reading-progress" aria-hidden="true"></div>
+    <header class="site-header">
+      <div class="inner">
+        <a class="brand" href={base}>Interview Prep</a>
+        <nav class="site-nav" id="site-nav" aria-label="Main">
+          {
+            nav.map((item) => (
+              <a href={`${base}${item.key}/`} aria-current={current === item.key ? 'page' : undefined}>
+                {item.label}
+              </a>
+            ))
+          }
+        </nav>
+        <div class="header-actions">
+          <button class="btn search-trigger" type="button" data-open-search aria-label="Search (⌘K)">
+            <span class="row"><Fragment set:html={icons.search} /><span class="label">Search</span></span>
+            <kbd data-mod-key>⌘K</kbd>
+          </button>
+          <a class="icon-btn" href={`${base}settings/`} aria-label="Settings" aria-current={current === 'settings' ? 'page' : undefined}>
+            <Fragment set:html={icons.settings} />
+          </a>
+          <button class="icon-btn menu-btn" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Menu" data-menu>
+            <Fragment set:html={icons.menu} />
+          </button>
+        </div>
+      </div>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <SearchPalette client:load base={base} />
+    <script>
+      import '../scripts/app';
+    </script>
+  </body>
+</html>

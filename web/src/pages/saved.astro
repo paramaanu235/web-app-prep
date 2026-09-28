@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Saved from '../components/islands/Saved';
+import { loadContent } from '../content-pipeline';
+
+const content = await loadContent();
+const docs = content.manifest.documents.map((d) => ({ id: d.id, title: d.title }));
+---
+
+<BaseLayout title="Saved" current="saved">
+  <Saved client:load base={import.meta.env.BASE_URL} docs={docs} />
+</BaseLayout>

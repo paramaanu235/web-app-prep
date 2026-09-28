@@ -1,0 +1,3 @@
+# The study files are hash-verified (ContentManifest.json); never rewrite line endings.
+*.md -text
+*.java -text

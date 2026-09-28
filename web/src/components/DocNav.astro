@@ -1,0 +1,27 @@
+---
+import type { Category } from '../content-pipeline';
+
+interface Props {
+  categories: Category[];
+  currentId?: string;
+}
+const { categories, currentId } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+{
+  categories.map((cat) => (
+    <div class="nav-group">
+      <h2>{cat.name}</h2>
+      <ul>
+        {cat.docs.map((d) => (
+          <li>
+            <a href={`${base}docs/${d.id}/`} aria-current={d.id === currentId ? 'page' : undefined}>
+              {d.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))
+}

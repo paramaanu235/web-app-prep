@@ -1,0 +1,12 @@
+.DS_Store
+scratch/
+# Xcode
+xcuserdata/
+DerivedData/
+*.xcuserstate
+# Web
+web/node_modules/
+web/dist/
+web/.astro/
+web/test-results/
+web/playwright-report/

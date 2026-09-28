@@ -1,0 +1,297 @@
+{
+  "version": 1,
+  "builtAt": "2026-09-10T02:00:00Z",
+  "documents": [
+    {
+      "id": "quick.reference",
+      "title": "Quick Reference",
+      "sourceFilename": "quick_reference.md",
+      "format": "markdown",
+      "primaryCategory": "Start Here",
+      "categoryIDs": [
+        "start_here"
+      ],
+      "order": 1,
+      "isHistorical": false,
+      "sha256": "20317101474254fc0d174b34fde2658965b9a4341899cbfe1213722024dc82e9",
+      "byteCount": 3225,
+      "lineCountAtManifestBuild": 68,
+      "summary": "Core interview mechanics, timeline, scoring rubric, and high-priority checklist."
+    },
+    {
+      "id": "codex.primary.plan",
+      "title": "Primary 12-Week Plan",
+      "sourceFilename": "codex_proposed_plan.md",
+      "format": "markdown",
+      "primaryCategory": "12-Week Preparation",
+      "categoryIDs": [
+        "plans"
+      ],
+      "order": 2,
+      "isHistorical": false,
+      "sha256": "939512e0d4fc2b5a6c8e0daca8e08ef6c689bb6945c23fd2ac27cda9ac003712",
+      "byteCount": 24363,
+      "lineCountAtManifestBuild": 282,
+      "summary": "The baseline structured 12-week preparation schedule spanning DSA, System Design, and Behavioral."
+    },
+    {
+      "id": "gemini.alternate.plan",
+      "title": "Alternate Plan \u2014 Gemini",
+      "sourceFilename": "gemini_proposed_plan.md",
+      "format": "markdown",
+      "primaryCategory": "12-Week Preparation",
+      "categoryIDs": [
+        "plans"
+      ],
+      "order": 3,
+      "isHistorical": false,
+      "sha256": "7e0d4cc5b236626a1a67aaaf798ba366dee60e87fd5a10d8f2705c0237fef4e0",
+      "byteCount": 24935,
+      "lineCountAtManifestBuild": 340,
+      "summary": "Alternate 12-week preparation roadmap with detailed weekly targets and milestone checkpoints."
+    },
+    {
+      "id": "grok.alternate.plan",
+      "title": "Alternate Plan \u2014 Grok",
+      "sourceFilename": "grok_proposed_plan.md",
+      "format": "markdown",
+      "primaryCategory": "12-Week Preparation",
+      "categoryIDs": [
+        "plans"
+      ],
+      "order": 4,
+      "isHistorical": false,
+      "sha256": "57d4cd07ebf03011b612e2d6b30f0d6bbcc08c6496c38cf3efdc4d157a986ab6",
+      "byteCount": 13534,
+      "lineCountAtManifestBuild": 256,
+      "summary": "Alternate aggressive preparation schedule focusing on rapid pattern mastery and mock drills."
+    },
+    {
+      "id": "weekly.tracker",
+      "title": "12-Week Tracker",
+      "sourceFilename": "weekly_tracker.md",
+      "format": "markdown",
+      "primaryCategory": "12-Week Preparation",
+      "categoryIDs": [
+        "plans",
+        "progress"
+      ],
+      "order": 5,
+      "isHistorical": false,
+      "sha256": "3a12279f700d951e4aff53bca8edf3d1db05c5f9845e0fd7fcbaa0e671055354",
+      "byteCount": 2103,
+      "lineCountAtManifestBuild": 85,
+      "summary": "Weekly hour tracking, problem metrics, confidence ratings, and daily preparation checklist."
+    },
+    {
+      "id": "star.story.bank",
+      "title": "STAR Story Bank",
+      "sourceFilename": "star_story_bank.md",
+      "format": "markdown",
+      "primaryCategory": "Behavioral",
+      "categoryIDs": [
+        "behavioral"
+      ],
+      "order": 6,
+      "isHistorical": false,
+      "sha256": "b10d30bd3850fe6b23dab21d4254580c8203e08f20fb1612050c9fe5868e61e1",
+      "byteCount": 4042,
+      "lineCountAtManifestBuild": 125,
+      "summary": "Structured behavioral examples mapped to Googleyness, leadership, ambiguity, and technical conflict."
+    },
+    {
+      "id": "grok.coding.questions",
+      "title": "Google L4/L5 Coding Questions",
+      "sourceFilename": "grok_coding_questions.md",
+      "format": "markdown",
+      "primaryCategory": "DSA Practice",
+      "categoryIDs": [
+        "dsa"
+      ],
+      "order": 7,
+      "isHistorical": false,
+      "sha256": "e82214f0b6465e797e075bdbfb038c2455d5de7606509ac57f7aaa9dbc91ce99",
+      "byteCount": 12267,
+      "lineCountAtManifestBuild": 376,
+      "summary": "Curated collection of Google interview coding problems grouped by algorithmic pattern and week."
+    },
+    {
+      "id": "amazon.dsa.questions",
+      "title": "Amazon DSA Questions",
+      "sourceFilename": "amazon_dsa_questions.md",
+      "format": "markdown",
+      "primaryCategory": "DSA Practice",
+      "categoryIDs": [
+        "dsa"
+      ],
+      "order": 8,
+      "isHistorical": false,
+      "sha256": "aa434a891fc780dfddc7ff35453a08848237c43fa963bef565c1a28f1147b4d2",
+      "byteCount": 15459,
+      "lineCountAtManifestBuild": 402,
+      "summary": "High-frequency Amazon coding questions covering trees, graphs, dynamic programming, and heaps."
+    },
+    {
+      "id": "grok.python.snippets",
+      "title": "Python Interview Muscle Memory",
+      "sourceFilename": "grok_python_snippets.md",
+      "format": "markdown",
+      "primaryCategory": "DSA Practice",
+      "categoryIDs": [
+        "dsa",
+        "python"
+      ],
+      "order": 9,
+      "isHistorical": false,
+      "sha256": "66d75962661d8b886dbc2de3eb9f33f75dff101271b0972278f01218b61dd646",
+      "byteCount": 64099,
+      "lineCountAtManifestBuild": 1607,
+      "summary": "Comprehensive Python reference: bisect, heapq, collections, graph algorithms, and bit manipulation."
+    },
+    {
+      "id": "java.interview.snippets",
+      "title": "Java Interview Snippets",
+      "sourceFilename": "java_interview_cheatsheet.md",
+      "format": "markdown",
+      "primaryCategory": "Java & Design",
+      "categoryIDs": [
+        "dsa",
+        "java"
+      ],
+      "order": 10,
+      "isHistorical": false,
+      "sha256": "8ceb1fa537bdfabeea20ff803a4adcf74269d554adae2675837c9c2cc234559d",
+      "byteCount": 68715,
+      "lineCountAtManifestBuild": 1771,
+      "summary": "53 in-depth sections covering Java collections, concurrency, streams, custom data structures, and idioms."
+    },
+    {
+      "id": "java.templates.source",
+      "title": "Java Interview Templates \u2014 Source",
+      "sourceFilename": "JavaInterviewTemplates.java",
+      "format": "java",
+      "primaryCategory": "Java & Design",
+      "categoryIDs": [
+        "java"
+      ],
+      "order": 11,
+      "isHistorical": false,
+      "sha256": "53300a1255926b290e9b4ac7e569bf2ce578c57781286c4c3bf7b60556636415",
+      "byteCount": 39962,
+      "lineCountAtManifestBuild": 935,
+      "summary": "Production-grade, fully commented Java implementations of Union-Find, Segment Tree, LRU, Trie, and Graph algorithms."
+    },
+    {
+      "id": "java.templates.test",
+      "title": "Java Template Tests \u2014 Source",
+      "sourceFilename": "JavaInterviewTemplatesTest.java",
+      "format": "java",
+      "primaryCategory": "Java & Design",
+      "categoryIDs": [
+        "java"
+      ],
+      "order": 12,
+      "isHistorical": false,
+      "sha256": "0bb1439c6cd73013b45241ddb7db7aa9bf122dd4ec4732766918590a53d9c145",
+      "byteCount": 13604,
+      "lineCountAtManifestBuild": 225,
+      "summary": "Comprehensive test suite validating the Java interview template algorithms with assertions."
+    },
+    {
+      "id": "java.design.patterns",
+      "title": "Java Design Patterns",
+      "sourceFilename": "java_design_pattern_cheatsheet.md",
+      "format": "markdown",
+      "primaryCategory": "Java & Design",
+      "categoryIDs": [
+        "java"
+      ],
+      "order": 13,
+      "isHistorical": false,
+      "sha256": "9ec00b8ba2b1de9ebbe4e669450e21568d8a85d2843d7c498dc8ec2b2040210f",
+      "byteCount": 58102,
+      "lineCountAtManifestBuild": 1462,
+      "summary": "33 Gang of Four and architectural design patterns with realistic code examples and trade-off analyses."
+    },
+    {
+      "id": "java.8.vs.17.guide",
+      "title": "Java 8 to 17 Interview Guide",
+      "sourceFilename": "java_8_vs_17_interview_guide.md",
+      "format": "markdown",
+      "primaryCategory": "Java & Design",
+      "categoryIDs": [
+        "java"
+      ],
+      "order": 14,
+      "isHistorical": false,
+      "sha256": "e53e391520ff77f39d8554a5b52a4ee0209b99f5fbc98eb5d042318389053255",
+      "byteCount": 41314,
+      "lineCountAtManifestBuild": 799,
+      "summary": "Deep dive into records, sealed classes, pattern matching, memory improvements, and modern JVM features."
+    },
+    {
+      "id": "django.cheatsheet",
+      "title": "Django Cheat Sheet",
+      "sourceFilename": "django_cheatsheet.md",
+      "format": "markdown",
+      "primaryCategory": "Backend Frameworks",
+      "categoryIDs": [
+        "backend"
+      ],
+      "order": 15,
+      "isHistorical": false,
+      "sha256": "4802254719e818c910e7e46a6707a23806af93053ef5cc204da38a7b88e9786e",
+      "byteCount": 21721,
+      "lineCountAtManifestBuild": 617,
+      "summary": "ORM optimizations, select_related/prefetch_related, transaction isolation, middleware, and caching."
+    },
+    {
+      "id": "fastapi.cheatsheet",
+      "title": "FastAPI Cheat Sheet",
+      "sourceFilename": "fastapi_cheatsheet.md",
+      "format": "markdown",
+      "primaryCategory": "Backend Frameworks",
+      "categoryIDs": [
+        "backend"
+      ],
+      "order": 16,
+      "isHistorical": false,
+      "sha256": "4745c328e881ed5369d7ebdf15a1a3ccaba53cd3b9dca1ede96a661598d6d4a9",
+      "byteCount": 21861,
+      "lineCountAtManifestBuild": 600,
+      "summary": "Async/await patterns, Pydantic v2 validation, dependency injection, OAuth2 security, and background tasks."
+    },
+    {
+      "id": "spring.boot.cheatsheet",
+      "title": "Spring Boot Cheat Sheet",
+      "sourceFilename": "spring_boot_cheatsheet.md",
+      "format": "markdown",
+      "primaryCategory": "Backend Frameworks",
+      "categoryIDs": [
+        "backend"
+      ],
+      "order": 17,
+      "isHistorical": false,
+      "sha256": "e437c1ef1d4d44a07c27a350ac26a6b5558b7a1d5619cc9528202629f997b67b",
+      "byteCount": 26804,
+      "lineCountAtManifestBuild": 709,
+      "summary": "IoC, Bean lifecycle, @Transactional propagation, Spring Data JPA, WebFlux, and Actuator metrics."
+    },
+    {
+      "id": "grok.python.review",
+      "title": "Historical Python Snippet Review",
+      "sourceFilename": "grok_python_snippets_review.md",
+      "format": "markdown",
+      "primaryCategory": "Archive & Reviews",
+      "categoryIDs": [
+        "archive"
+      ],
+      "order": 18,
+      "isHistorical": true,
+      "sha256": "a812c0b3ec7fed867771b05e5dc8783ae3dfa0d7c13a1e11c720965b7877a985",
+      "byteCount": 17072,
+      "lineCountAtManifestBuild": 174,
+      "summary": "Historical audit and correction notes for earlier Python snippets. Maintained for archival context."
+    }
+  ]
+}

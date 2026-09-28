@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { loadContent } from '../content-pipeline';
+
+const content = await loadContent();
+const base = import.meta.env.BASE_URL;
+const docsById = content.docsById;
+---
+
+<BaseLayout title="Library" current="library">
+  <div class="page">
+    <header class="page-header">
+      <h1>Library</h1>
+      <p>{content.docs.length} documents · {content.categories.length} categories · everything works offline.</p>
+    </header>
+
+    {
+      content.categories.map((cat) => (
+        <section aria-labelledby={`cat-${cat.id}`}>
+          <h2 class="section-title" id={`cat-${cat.id}`}>{cat.name}</h2>
+          <ul class="divider-list">
+            {cat.docs.map((meta) => {
+              const doc = docsById.get(meta.id)!;
+              const minutes = Math.max(1, Math.round(doc.wordCount / 230));
+              return (
+                <li>
+                  <a class="doc-row" href={`${base}docs/${meta.id}/`} data-progress-doc={meta.id}>
+                    <span class="doc-row-title">
+                      {meta.title} {meta.isHistorical && <span class="badge">Historical</span>}
+                    </span>
+                    {meta.summary && <span class="doc-row-summary">{meta.summary}</span>}
+                    <span class="doc-row-meta">
+                      <span data-progress-label>{meta.format === 'java' ? `Java · ${doc.lineCount} lines` : `${minutes} min read`}</span>
+                      <span class="progress-track" aria-hidden="true"><span class="progress-fill" /></span>
+                    </span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<script>
+  import { loadState, subscribe } from '../lib/state/store';
+  import { readingProgress } from '../lib/state/derive';
+  import type { UserStudyState } from '../lib/state/types';
+
+  function render(state: UserStudyState) {
+    document.querySelectorAll<HTMLElement>('[data-progress-doc]').forEach((row) => {
+      const { progress, done } = readingProgress(state, row.dataset.progressDoc!);
+      row.querySelector<HTMLElement>('.progress-fill')!.style.width = `${Math.round(progress * 100)}%`;
+      row.querySelector('.progress-track')!.toggleAttribute('hidden', progress === 0);
+      row.querySelector('.doc-row-title .badge.done')?.remove();
+      if (done) row.querySelector('.doc-row-title')!.insertAdjacentHTML('beforeend', ' <span class="badge done">Read</span>');
+    });
+  }
+  loadState().then(render);
+  subscribe(render);
+</script>

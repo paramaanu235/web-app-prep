@@ -1,0 +1,24 @@
+---
+import type { TocItem } from '../content-pipeline';
+
+interface Props {
+  items: TocItem[];
+  title?: string;
+}
+const { items, title } = Astro.props;
+---
+
+<nav class="toc">
+  {title && <p class="toc-title">{title}</p>}
+  <ul>
+    {
+      items.map((item) => (
+        <li>
+          <a href={`#${item.anchor}`} data-depth={Math.min(item.depth, 2)} data-section-id={item.sectionId}>
+            {item.title.replace(/[*`]/g, '')}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
