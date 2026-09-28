@@ -3,9 +3,13 @@ import { getState, loadState, subscribe } from '../../lib/state/store';
 import type { UserStudyState } from '../../lib/state/types';
 
 export function useStudyState(): UserStudyState | null {
-  const [state, setState] = useState(getState());
+  // Always start from null so the hydrating render matches the server-rendered
+  // placeholder, even when the store has already loaded; a mismatch makes Preact
+  // leave the placeholder in the DOM.
+  const [state, setState] = useState<UserStudyState | null>(null);
   useEffect(() => {
     let alive = true;
+    setState(getState());
     loadState().then((s) => alive && setState(s));
     const unsubscribe = subscribe(setState);
     return () => {

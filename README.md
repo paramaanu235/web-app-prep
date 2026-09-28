@@ -15,10 +15,12 @@ After editing content, follow [`CONTENT_UPDATE.md`](ios/GoogleInterviewPrep/CONT
 cd web
 npm install
 npm run dev      # http://localhost:4321/web-app-prep/
-npm test         # integrity, iOS parity, backup format, search
+npm test         # unit: integrity, iOS parity, backup format, search
+npm run test:e2e # browser: Playwright + axe against the production build
+npm run lighthouse -- --desktop   # needs `npx astro preview --port 4322` running
 npm run build    # static site in web/dist
 ```
 
-Every push to `main` runs the tests and deploys to GitHub Pages via `.github/workflows/deploy-web.yml`.
+Every push to `main` runs all of the above and deploys to GitHub Pages via `.github/workflows/deploy-web.yml`, then smoke-tests the live site (including offline mode).
 
 Study progress, bookmarks and notes stay in your browser (IndexedDB). Use **Settings → Export** to back them up; the file is the same format as the iOS app's export, so it can be imported on either one.

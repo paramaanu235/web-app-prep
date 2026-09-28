@@ -12,6 +12,12 @@ import { slugify } from './text';
 import type { ManifestDocument, SectionedDocument } from './types';
 
 const THEMES = { light: 'github-light', dark: 'github-dark-dimmed' } as const;
+// Token colours that fall below WCAG AA (4.5:1) on our code backgrounds, swapped
+// for darker/lighter variants of the same hue (checked against light and sepia).
+const COLOR_REPLACEMENTS = {
+  'github-light': { '#d73a49': '#b31d28', '#6a737d': '#57606a', '#e36209': '#a04600', '#22863a': '#1a6b2e' },
+  'github-dark-dimmed': { '#768390': '#8b98a5' },
+};
 const LANGS = ['java', 'python', 'bash', 'swift', 'xml', 'yaml'];
 const LANG_ALIASES: Record<string, string> = { sh: 'bash', shell: 'bash', zsh: 'bash', py: 'python' };
 
@@ -123,6 +129,7 @@ function rehypeStudyChrome(highlighter: Highlighter) {
           lang: LANGS.includes(lang) ? lang : 'text',
           themes: THEMES,
           defaultColor: false,
+          colorReplacements: COLOR_REPLACEMENTS,
         });
         const pre = highlighted.children[0] as Element;
         pre.properties.tabIndex = 0;
@@ -189,6 +196,7 @@ export async function renderJava(doc: ManifestDocument, content: string): Promis
     lang: 'java',
     themes: THEMES,
     defaultColor: false,
+    colorReplacements: COLOR_REPLACEMENTS,
     transformers: [
       {
         pre(node) {

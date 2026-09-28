@@ -7,7 +7,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "test": "vitest run",
-    "check": "astro check"
+    "check": "astro check",
+    "test:e2e": "playwright test",
+    "lighthouse": "node scripts/lighthouse.mjs"
   },
   "dependencies": {
     "@astrojs/preact": "^6.0.5",
@@ -27,11 +29,16 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
     "@types/hast": "^3.0.5",
     "@types/mdast": "^4.0.4",
     "@types/node": "^26.6.3",
+    "chrome-launcher": "^1.2.1",
+    "lighthouse": "^13.5.0",
     "typescript": "^6.0.3",
-    "vitest": "^5.0.2"
+    "vitest": "^5.0.2",
+    "wait-on": "^9.3.0"
   },
   "allowScripts": {
     "esbuild@0.28.2": true,

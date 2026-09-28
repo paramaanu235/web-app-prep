@@ -4,6 +4,7 @@ import { formatDate, sectionHref } from '../../lib/state/derive';
 import type { Bookmark } from '../../lib/state/types';
 import { useStudyState } from './hooks';
 import type { DocRef } from './Home';
+import { Loading } from './Loading';
 
 function BookmarkRow({ bookmark, base, docTitle }: { bookmark: Bookmark; base: string; docTitle: string }) {
   const [editing, setEditing] = useState(false);
@@ -46,7 +47,7 @@ function BookmarkRow({ bookmark, base, docTitle }: { bookmark: Bookmark; base: s
 
 export default function Saved({ base, docs }: { base: string; docs: DocRef[] }) {
   const state = useStudyState();
-  if (!state) return <div class="page page-narrow" aria-busy="true" style={{ minHeight: '60vh' }} />;
+  if (!state) return <Loading />;
 
   const groups = docs
     .map((doc) => ({ doc, bookmarks: state.bookmarks.filter((b) => b.documentID === doc.id) }))

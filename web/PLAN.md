@@ -25,8 +25,8 @@ The iOS app is basically a reader built around 18 study files, plus some persona
 - **Shiki** for syntax highlighting at build time (GitHub Light / GitHub Dark Dimmed), so no highlighting code ships to the browser.
 - **remark/rehype** for Markdown, with GitHub-style tables. Heading ids are set from the ported sectioniser, matched by source line.
 - **IndexedDB** (via `idb-keyval`) for study state, synced across open tabs with `BroadcastChannel`, plus JSON export/import.
-- **Offline support** through a generated service worker (`/sw.js`) that precaches every page and the search index.
-- **Vitest** for unit tests and content checks, and `astro check` for types. Playwright + axe end-to-end tests are still to do (phase 6).
+- **Offline support** through a service worker generated after each build (`integrations/service-worker.ts`). It precaches every page, script, style, font and the search index, and is registered only once the page is idle so it never slows first paint.
+- **Vitest** for unit tests and content checks, `astro check` for types, **Playwright + axe** for browser tests, and a **Lighthouse** script (`npm run lighthouse`).
 - Fonts are self-hosted (`@fontsource`), so nothing loads from a third-party CDN.
 
 ```
@@ -36,9 +36,12 @@ web/
   src/lib/state/          # UserStudyState types, IndexedDB store, actions, iOS-compatible codec
   src/lib/prefs.ts        # theme / font / size / line length
   src/components/         # Astro components + Preact islands
-  src/pages/              # routes, search-index.json, sw.js, manifest.webmanifest
+  src/pages/              # routes, search-index.json, manifest.webmanifest
+  integrations/           # post-build service worker generator
   src/scripts/            # reader behaviour (scroll-spy, bookmarks, shortcuts)
   tests/                  # Vitest
+  e2e/                    # Playwright + axe
+  scripts/lighthouse.mjs  # Lighthouse audit, fails below a threshold
 ```
 
 ## 3. GitHub Pages constraints (amendment)
@@ -49,7 +52,7 @@ Hosting on GitHub Pages changes a few things:
 2. **Static only.** There is no server, so every route is prerendered. Search, bookmarks and deep links resolve in the browser, using query strings (`?q=`, `?week=`, `?section=`) and hashes, which Pages serves without rewrites.
 3. **404.** Astro emits `404.html`, which Pages serves for unknown paths under the site.
 4. **The site is public.** GitHub Pages has no access control on personal accounts; even a private repo would still publish a public site. The study content is readable by anyone with the URL. Personal data (progress, notes, bookmarks) never leaves the browser.
-5. **Deploys.** `.github/workflows/deploy-web.yml` runs on every push to `main`: `npm ci`, then tests (including the SHA-256 integrity check), `astro check`, build, then deploy to Pages. A content edit without a manifest update fails the build instead of shipping mismatched content.
+5. **Deploys.** `.github/workflows/deploy-web.yml` runs on every push to `main` and on pull requests: unit tests (including the SHA-256 integrity check), `astro check`, the Playwright suite, and Lighthouse (accessibility, best practices and SEO must be ≥ 95). Only `main` deploys to Pages. A final job then smoke-tests the live site, including offline mode. A content edit without a manifest update fails the build instead of shipping mismatched content.
 6. **Line endings.** `.gitattributes` marks the `.md`/`.java` files `-text` so Git never rewrites them, which would break their hashes.
 
 ## 4. Design: minimal layout, readable text
@@ -107,10 +110,37 @@ Hosting on GitHub Pages changes a few things:
 | 3 | Search: scoring port, `⌘K` palette, results page | ✅ Done |
 | 4 | State: IndexedDB store, reading progress, bookmarks, notes, iOS import/export | ✅ Done |
 | 5 | Progress: home dashboard, 12-week tracker, checklist, mock log, slow patterns | ✅ Done |
-| 6 | Polish: Playwright e2e + axe, Lighthouse ≥ 95, offline verification on the deployed site | 🟡 Service worker and print styles done; e2e/a11y automation still to do |
+| 6 | Polish: Playwright e2e + axe, Lighthouse ≥ 95, offline verification on the deployed site | ✅ Done (section 9) |
 | 7 | Deploy plus CI (tests, type check, build, integrity) on GitHub Pages | ✅ Workflow in place |
 
 ## 8. Open decisions
 
 - **Sync between devices.** v1 uses the manual JSON export/import that already works with iOS. Automatic sync would need a backend (for example Supabase, or a Cloudflare Worker with KV), because GitHub Pages is static. Deferred.
 - **Keeping content private.** If the notes shouldn't be public, the site would have to move to a host with access control, such as Cloudflare Pages with Cloudflare Access. The Astro build works there unchanged apart from `site`/`base`.
+
+## 9. Phase 6 results
+
+**Browser tests** (`npm run test:e2e`, 56 tests, desktop + Pixel 7) run against the production build:
+- every route and all 18 documents render without console errors, and unknown paths get the 404 page;
+- reader: TOC scroll-spy, copy/wrap, in-page links, bookmarks and notes, `j`/`k`/`b`/`?` shortcuts, mark as read, resume position, Java line links, `?section=` deep links;
+- search palette (`/`, `⌘K`, header button) and the search page filters;
+- theme persistence, the week editor, mock log, and export → reset → import round trip in the iOS format; invalid backups are rejected;
+- offline: after one visit, other documents, the library and search all work with the network off;
+- phones: Contents sheet, menu, no sideways scrolling;
+- axe (WCAG 2.1 A/AA) on 9 pages in light, dark and sepia, plus the open search palette: no violations.
+
+**Lighthouse** (local production build, 7 pages):
+
+| | Performance | Accessibility | Best practices | SEO |
+|---|---|---|---|---|
+| Mobile (throttled) | 99–100 | 100 | 100 | 100 |
+| Desktop | 100 | 100 | 100 | 100 |
+
+**Bugs the tests found and fixed**
+1. Home, Progress, Saved and Settings kept `aria-busy="true"` and a 60vh min-height after loading. The store was often ready before hydration, so the first client render didn't match the server HTML and Preact left the placeholder behind. Islands now always hydrate from the placeholder state.
+2. Four GitHub Light token colours (keywords, comments, strings, numbers) and one Dark Dimmed colour were below 4.5:1 on our code backgrounds, down to 2.8:1 on sepia. They're replaced with same-hue variants that pass in every theme.
+3. Search matches (`<mark>`) in dark mode inherited muted text on a dark yellow background. They now use the full text colour.
+4. Search palette results nested a link inside `role="option"` (axe: nested-interactive). The link is now the option.
+5. Pressing `/`, `⌘K` or clicking Search before the palette hydrated did nothing. Shortcuts now live in the always-loaded app script and are replayed on hydration.
+6. Offline, pages you hadn't visited online failed to load their scripts, because only visited pages' assets were cached. The service worker is now generated after the build with a full asset list, and ignores `Vary` headers when matching.
+7. Home's mobile Speed Index was 12 s because the service worker precached the whole site during first load. Registration now waits for load + idle.

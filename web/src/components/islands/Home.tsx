@@ -1,6 +1,7 @@
 import { currentWeek, daysUntilInterview, readingProgress, sectionHref } from '../../lib/state/derive';
 import { Checklist } from './Checklist';
 import { useStudyState } from './hooks';
+import { Loading } from './Loading';
 
 export interface DocRef {
   id: string;
@@ -12,7 +13,7 @@ export default function Home({ base, docs, startHere }: { base: string; docs: Do
   const state = useStudyState();
   const titleOf = (id: string) => docs.find((d) => d.id === id)?.title;
 
-  if (!state) return <div class="page page-narrow" aria-busy="true" style={{ minHeight: '60vh' }} />;
+  if (!state) return <Loading />;
 
   const week = currentWeek(state);
   const days = daysUntilInterview(state);

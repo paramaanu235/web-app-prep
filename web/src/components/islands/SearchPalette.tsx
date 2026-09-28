@@ -4,11 +4,6 @@ import { icons } from '../../lib/icons';
 import { Highlight } from './Highlight';
 import { useDebounced } from './hooks';
 
-function isTyping(target: EventTarget | null): boolean {
-  const el = target as HTMLElement | null;
-  return !!el && (el.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName));
-}
-
 export default function SearchPalette({ base }: { base: string }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const input = useRef<HTMLInputElement>(null);
@@ -33,21 +28,14 @@ export default function SearchPalette({ base }: { base: string }) {
   };
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if ((e.key === 'k' && (e.metaKey || e.ctrlKey)) || (e.key === '/' && !isTyping(e.target))) {
-        e.preventDefault();
-        open();
-      }
+    // Requests come from src/scripts/app.ts; one may have arrived before hydration.
+    const onRequest = () => {
+      delete document.documentElement.dataset.searchRequested;
+      open();
     };
-    const onClick = (e: MouseEvent) => {
-      if ((e.target as HTMLElement).closest('[data-open-search]')) open();
-    };
-    document.addEventListener('keydown', onKey);
-    document.addEventListener('click', onClick);
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.removeEventListener('click', onClick);
-    };
+    if (document.documentElement.dataset.searchRequested !== undefined) onRequest();
+    document.addEventListener('open-search', onRequest);
+    return () => document.removeEventListener('open-search', onRequest);
   }, []);
 
   useEffect(() => setSelected(0), [debounced, includeHistorical]);
@@ -113,8 +101,16 @@ export default function SearchPalette({ base }: { base: string }) {
       ) : (
         <ul class="palette-results" id="palette-results" role="listbox" ref={list}>
           {hits.map((hit, i) => (
-            <li key={hit.entry.s + hit.anchor} id={`hit-${i}`} role="option" aria-selected={i === selected} onMouseMove={() => setSelected(i)}>
-              <a href={hrefFor(hit)} tabIndex={-1} onClick={() => dialog.current?.close()}>
+            <li key={hit.entry.s + hit.anchor} role="presentation">
+              <a
+                id={`hit-${i}`}
+                role="option"
+                aria-selected={i === selected}
+                href={hrefFor(hit)}
+                tabIndex={-1}
+                onMouseMove={() => setSelected(i)}
+                onClick={() => dialog.current?.close()}
+              >
                 <div class="hit-title">
                   <Highlight text={hit.entry.t} query={debounced} />
                 </div>

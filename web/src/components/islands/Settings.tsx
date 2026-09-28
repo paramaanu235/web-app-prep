@@ -6,6 +6,7 @@ import { applyPrefs, readWebPrefs, type Measure, type ReadingFont, type WebPrefs
 import { isPersistent, replaceState } from '../../lib/state/store';
 import { THEMES, type ThemePreference } from '../../lib/state/types';
 import { useStudyState } from './hooks';
+import { Loading } from './Loading';
 
 function Segmented<T extends string>({ label, value, options, onChange }: {
   label: string;
@@ -31,7 +32,7 @@ export default function Settings({ integrity }: { integrity: { documents: number
   const [message, setMessage] = useState('');
 
   useEffect(() => setPrefs(readWebPrefs()), []);
-  if (!state || !prefs) return <div class="page page-narrow" aria-busy="true" style={{ minHeight: '60vh' }} />;
+  if (!state || !prefs) return <Loading />;
 
   const setPref = (patch: Partial<WebPrefs>) => setPrefs(applyPrefs({ ...prefs, ...patch }, state.themePreference));
   const setTheme = (theme: ThemePreference) => {

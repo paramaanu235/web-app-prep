@@ -5,6 +5,7 @@ import { icons } from '../../lib/icons';
 import { isoNow, WEEK_STATUSES, type WeekProgress } from '../../lib/state/types';
 import { Checklist } from './Checklist';
 import { useStudyState } from './hooks';
+import { Loading } from './Loading';
 
 const CONFIDENCE = ['High uncertainty', 'Need scaffolding', 'Steady foundation', 'Fluent & robust', 'Senior interview ready'];
 const MOCK_TYPES = ['Coding', 'System Design', 'Behavioral'];
@@ -142,7 +143,7 @@ export default function Progress({ base, trackerDocId }: { base: string; tracker
     if (w >= 1 && w <= 12) setSelected(w);
   }, []);
 
-  if (!state) return <div class="page" aria-busy="true" style={{ minHeight: '60vh' }} />;
+  if (!state) return <Loading />;
 
   const now = currentWeek(state);
   const weeks = Array.from({ length: 12 }, (_, i) => state.weeklyProgress[i + 1]!).filter(Boolean);

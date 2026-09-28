@@ -3,23 +3,23 @@ name: Deploy web app
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: web
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: web
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -28,20 +28,56 @@ jobs:
           cache: npm
           cache-dependency-path: web/package-lock.json
       - run: npm ci
-      # Tests include the SHA-256 integrity check and iOS anchor parity.
+      # Unit tests include the SHA-256 integrity check and iOS anchor parity.
       - run: npm test
       - run: npm run check
-      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      # Builds the site, serves it with `astro preview`, and runs the browser suite
+      # (pages, reader, search, saved data, offline, axe in all three themes).
+      - run: npm run test:e2e
+      - name: Lighthouse (accessibility, best practices, SEO must be ≥ 95)
+        run: |
+          npx astro preview --port 4322 --ignore-lock &
+          npx wait-on -t 60000 http://localhost:4322/web-app-prep/
+          npm run lighthouse -- --skip-perf
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: playwright-report
+          path: web/test-results/
+          retention-days: 7
       - uses: actions/upload-pages-artifact@v5
+        if: github.event_name != 'pull_request'
         with:
           path: web/dist
 
   deploy:
+    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
         uses: actions/deploy-pages@v5
+
+  verify-live:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Smoke-test the deployed site, including offline mode
+        run: npx playwright test e2e/pages.spec.ts e2e/offline.spec.ts e2e/search.spec.ts --project=desktop
+        env:
+          E2E_BASE_URL: https://paramaanu235.github.io/web-app-prep/
